@@ -1,5 +1,6 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
 const router = express.Router();
 
@@ -55,12 +56,19 @@ const requireAdminOrDean = (req, res, next) => {
   next();
 };
 
-// Database connection configuration
+// Load env once (if not already loaded)
+dotenv.config();
+
+// Database connection configuration (env-first)
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'ispsc_tagudin_dms_2'
+  host: process.env.DB_HOST || process.env.MYSQLHOST || '127.0.0.1',
+  port: Number(process.env.DB_PORT || process.env.MYSQLPORT || 3306),
+  user: process.env.DB_USER || process.env.MYSQLUSER || 'root',
+  password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '',
+  database: process.env.DB_NAME || process.env.MYSQLDATABASE || 'ispsc_tagudin_dms_2',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 };
 
 // Create database connection pool
