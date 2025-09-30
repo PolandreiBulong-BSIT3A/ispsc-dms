@@ -1,7 +1,7 @@
 // Document Preferences Client API
 // Handles user-specific document preferences like favorites and pins
 
-const BASE_URL = process.env.FRONTEND_BASE_API || 'http://localhost:5000/api';
+const BASE_URL = process.env.FRONTEND_BASE_API || process.env.BACKEND_URL?.replace(/\/?$/, '/api') || `http://localhost:${process.env.PORT || 5000}/api`;
 
 // Get user's document preferences
 export const fetchUserPreferences = async () => {

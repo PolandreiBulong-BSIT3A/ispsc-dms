@@ -37,7 +37,7 @@ import { checkMaintenanceMode } from './src/lib/api/backend/middleware/maintenan
 dotenv.config();
 
 // ----- Config -----
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const FRONTEND_URL = process.env.FRONTEND_URL || (process.env.BACKEND_URL ? process.env.BACKEND_URL.replace(/:\d+$/, '') : 'http://localhost:5173');
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -67,10 +67,8 @@ app.use(helmet({
         "'self'",
         "https://accounts.google.com",
         FRONTEND_URL,
-        "http://localhost:5000",
-        "ws://localhost:5000",
-        "http://127.0.0.1:5000",
-        "ws://127.0.0.1:5000"
+        process.env.BACKEND_URL || `http://localhost:${PORT}`,
+        (process.env.BACKEND_URL || `http://localhost:${PORT}`).replace(/^http/, 'ws')
       ],
       frameSrc: ["'self'", "https://drive.google.com", "https://accounts.google.com"],
       objectSrc: ["'none'"],

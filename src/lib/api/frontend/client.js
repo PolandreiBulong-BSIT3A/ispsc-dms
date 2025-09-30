@@ -2,9 +2,13 @@
 // Reads base URL from Vite env with sensible fallback
 import { fetchWithRetry } from './http.js';
 
+// Prefer Vite env; otherwise, default to same-origin '/api' when running in a browser,
+// and only fall back to localhost in non-browser environments
 export const API_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL)
   ? import.meta.env.VITE_API_BASE_URL
-  : 'http://localhost:5000/api';
+  : (typeof window !== 'undefined' && window.location && window.location.origin
+      ? `${window.location.origin}/api`
+      : 'http://localhost:5000/api');
 
 export const buildUrl = (path) => {
   if (!path) return API_BASE_URL;
