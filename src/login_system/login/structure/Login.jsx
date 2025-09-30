@@ -13,6 +13,8 @@ import LoginBackgroundImage from "../../../assets/backgrounds/smallbanner.png";
 import SignupBackgroundImage from "../../../assets/backgrounds/banner.png";
 import { buildUrl } from '../../../lib/api/frontend/client.js';
 import { googleAuth } from '../../../lib/api/frontend/google.api.js';
+import { signup, verifyOtp, resendOtp, forgotPassword, verifyForgotPasswordOtp, updatePassword } from '../../../lib/api/frontend/auth.api.js';
+import { fetchDepartments, getFallbackDepartments } from '../../../lib/api/frontend/departments.api.js';
 import '../css/Login.css';
 
 const Login = () => {
