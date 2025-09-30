@@ -10,14 +10,15 @@ const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || `${BACKEND_URL}/api/auth/google/callback`;
 
-// Guard: ensure required Google envs are present (especially in production)
-if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+// Flag whether Google OAuth is properly configured
+const GOOGLE_ENABLED = Boolean(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET);
+
+// Guard: log guidance; in production you likely want this configured
+if (!GOOGLE_ENABLED) {
   const msg = 'Missing Google OAuth configuration. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET (and optionally GOOGLE_CALLBACK_URL).';
   if ((process.env.NODE_ENV || 'development') === 'production') {
-    // In production, fail fast
-    throw new Error(msg);
+    console.warn(`[Google OAuth Disabled] ${msg}`);
   } else {
-    // In dev, warn to help setup
     console.warn(msg);
   }
 }
@@ -35,12 +36,13 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-// Configure Google OAuth strategy
-passport.use(new GoogleStrategy({
-  clientID: GOOGLE_CLIENT_ID,
-  clientSecret: GOOGLE_CLIENT_SECRET,
-  callbackURL: GOOGLE_CALLBACK_URL
-}, (accessToken, refreshToken, profile, done) => {
+// Configure Google OAuth strategy only if enabled
+if (GOOGLE_ENABLED) {
+  passport.use(new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: GOOGLE_CALLBACK_URL
+  }, (accessToken, refreshToken, profile, done) => {
   try {
     const email = profile.emails && profile.emails[0] ? profile.emails[0].value : '';
     const profilePic = profile.photos && profile.photos[0] ? profile.photos[0].value : '';
@@ -113,21 +115,35 @@ passport.use(new GoogleStrategy({
     console.error('Exception in Google OAuth strategy:', e);
     return done(e);
   }
-}));
+  }));
+}
 
 const router = express.Router();
 
 // Start Google OAuth
-router.get('/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-    accessType: 'offline',
-    prompt: 'consent'
-  })
-);
+if (GOOGLE_ENABLED) {
+  router.get('/auth/google',
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      accessType: 'offline',
+      prompt: 'consent'
+    })
+  );
+} else {
+  router.get('/auth/google', (req, res) => {
+    return res.status(503).json({
+      success: false,
+      code: 'GOOGLE_OAUTH_DISABLED',
+      message: 'Google OAuth is not configured.'
+    });
+  });
+}
 
 // Google OAuth callback
 router.get('/auth/google/callback', (req, res, next) => {
+  if (!GOOGLE_ENABLED) {
+    return res.redirect(`${FRONTEND_URL}/login?error=oauth_failed`);
+  }
   passport.authenticate('google', async (err, user, info) => {
     if (err) {
       console.error('Passport error during Google callback:', err);
