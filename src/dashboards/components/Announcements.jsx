@@ -5,10 +5,12 @@ import { useUser } from '../../contexts/UserContext.jsx';
 import socket from '../../lib/realtime/socket.js';
 import { fetchDepartments, getFallbackDepartments } from '../../lib/api/frontend/departments.api.js';
 import Select from 'react-select';
+
+const Announcements = ({ role, setActiveTab }) => {
   const [loading, setLoading] = useState(false);
   const [announcements, setAnnouncements] = useState([]);
   const [error, setError] = useState('');
-  const [showForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { user: currentUser } = useUser();
@@ -900,6 +902,6 @@ import Select from 'react-select';
     </Modal>
   </div>
 );
-
+};
 
 export default Announcements;
