@@ -23,13 +23,31 @@ const router = express.Router();
 // JWT Configuration
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
 
-// Configure Nodemailer (Gmail example)
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER || 'victoriyaklauss03@gmail.com',
-    pass: process.env.EMAIL_PASS || 'kohi fkij wnmz syxl'
+// Configure Nodemailer via environment variables
+// Defaults target Gmail SMTP if no host/port provided
+const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com';
+const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
+const SMTP_SECURE = String(process.env.SMTP_SECURE || 'false').toLowerCase() === 'true';
+const EMAIL_USER = process.env.EMAIL_USER || '';
+const EMAIL_PASS = process.env.EMAIL_PASS || '';
+
+if (!EMAIL_USER || !EMAIL_PASS) {
+  const msg = 'Missing EMAIL_USER/EMAIL_PASS for Nodemailer. Set them in .env';
+  if ((process.env.NODE_ENV || 'development') === 'production') {
+    throw new Error(msg);
+  } else {
+    console.warn(msg);
   }
+}
+
+const transporter = nodemailer.createTransport({
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: SMTP_SECURE, // true for 465, false for 587/STARTTLS
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASS,
+  },
 });
 
 // Multer for profile picture upload (memory storage)
@@ -117,7 +135,7 @@ router.post('/signup', signupRateLimit, validateSignup, async (req, res) => {
 
     // Send OTP email
           const mailOptions = {
-      from: process.env.EMAIL_USER || 'victoriyaklauss03@gmail.com',
+      from: EMAIL_USER,
             to: email,
       subject: 'ISPSc DMS - Email Verification',
       html: `
@@ -542,7 +560,7 @@ router.post('/resend-otp', otpRateLimit, async (req, res) => {
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_USER || 'victoriyaklauss03@gmail.com',
+      from: EMAIL_USER,
       to: email,
       subject: 'ISPSc DMS - New Verification Code',
       html: `
