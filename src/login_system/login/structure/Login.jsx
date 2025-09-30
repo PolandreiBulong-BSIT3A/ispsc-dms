@@ -12,6 +12,7 @@ import LanImage from "../../../assets/logos/lan.png";
 import LoginBackgroundImage from "../../../assets/backgrounds/smallbanner.png";
 import SignupBackgroundImage from "../../../assets/backgrounds/banner.png";
 import { buildUrl } from '../../../lib/api/frontend/client.js';
+import { googleAuth } from '../../../lib/api/frontend/google.api.js';
 import '../css/Login.css';
 
 const Login = () => {
