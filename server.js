@@ -1,5 +1,7 @@
 
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -144,6 +146,19 @@ app.use('/api', UsersRouter);
 app.use('/api', RequestsRouter);
 app.use('/api', DocumentsRouter);
 app.use('/api', ActionsRouter);
+
+// ----- Serve Frontend (SPA) in production -----
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distDir = path.join(__dirname, 'dist');
+
+// Serve static assets from Vite build output
+app.use(express.static(distDir));
+
+// SPA fallback: send index.html for non-API routes
+app.get(/^(?!\/api).*/, (req, res, next) => {
+  res.sendFile(path.join(distDir, 'index.html'));
+});
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
