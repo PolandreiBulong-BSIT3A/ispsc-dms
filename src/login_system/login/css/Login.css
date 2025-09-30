@@ -213,7 +213,7 @@
 
 .page-transition.signup-mode {
   background-color: transparent;
-  background-image: url('../../assets/backgrounds/banner.png');
+  background-image: url('../../../assets/backgrounds/banner.png');
   background-size: cover;
   background-position: center;
   position: relative;

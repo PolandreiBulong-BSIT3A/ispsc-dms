@@ -12,6 +12,7 @@ import LanImage from "../../../assets/logos/lan.png";
 import LoginBackgroundImage from "../../../assets/backgrounds/smallbanner.png";
 import SignupBackgroundImage from "../../../assets/backgrounds/banner.png";
 import { buildUrl } from '../../../lib/api/frontend/client.js';
+import '../css/Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
