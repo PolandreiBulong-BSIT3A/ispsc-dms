@@ -1,0 +1,138 @@
+.dashboard-root {
+  width: 100%;
+}
+
+.dashboard-content {
+  overflow: hidden; /* prevent any bleed beyond rounded container */
+  border-radius: 12px;
+}
+
+/* Stats grid responsive tweaks */
+.dashboard-stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Simple list scroll behavior */
+.dashboard-simple-list {
+  max-height: 420px;
+}
+
+/* Tab content spacing on small screens */
+@media (max-width: 992px) {
+  .dashboard-tab-content {
+    padding: 20px !important;
+  }
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-tab-content {
+    padding: 16px !important;
+  }
+  /* Prevent card clipping in overview on small screens */
+  .dashboard-content {
+    padding-bottom: 12px;
+  }
+  .dashboard-mobile-select {
+    max-width: 260px;
+  }
+  .dashboard-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 6px;
+  }
+  .dashboard-section-actions {
+    gap: 10px;
+    width: 100%;
+  }
+  .dashboard-section-actions > button {
+    flex: 1 1 calc(50% - 10px);
+  }
+  .dashboard-content {
+    border-radius: 10px;
+  }
+  .dashboard-simple-list {
+    max-height: 360px;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-tab-content {
+    padding: 14px !important;
+  }
+  .dashboard-root h1 {
+    font-size: clamp(18px, 6vw, 22px) !important;
+    margin-bottom: 4px;
+  }
+  .dashboard-mobile-select {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  /* Modal mobile overflow fix */
+  .dashboard-content .modal {
+    max-width: 95vw !important;
+  }
+  .dashboard-content .modal-body,
+  .dashboard-content .modal {
+    overflow-y: auto;
+  }
+  /* Stack header title above actions on very small screens */
+  .dashboard-section-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px !important;
+  }
+  .dashboard-section-actions > button {
+    flex: 1 1 100%;
+  }
+  .dashboard-user-list .userItem,
+  .dashboard-simple-list .simpleItem {
+    padding: 12px !important;
+  }
+  .recent-card .card-body {
+    padding: 12px !important;
+  }
+}
+
+/* Ultra-small devices (<=360px, e.g., 320px width) */
+@media (max-width: 360px) {
+  .dashboard-tab-content {
+    padding: 12px !important;
+  }
+  .dashboard-content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .dashboard-stats-grid {
+    gap: 10px !important;
+  }
+  .recent-card .card-body {
+    padding: 10px !important;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
