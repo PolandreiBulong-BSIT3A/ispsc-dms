@@ -186,7 +186,7 @@ router.get('/auth/google/callback', (req, res, next) => {
           updatedAt: user.updated_at,
           isNewGoogleUser: user.isNewGoogleUser || false
         }));
-        return res.redirect(`${FRONTEND_URL}/login?user=${userData}`);
+        return res.redirect(`${FRONTEND_URL}/dashboard?user=${userData}`);
       } catch (serializeErr) {
         console.error('Error serializing user data for redirect:', serializeErr);
         return res.redirect(`${FRONTEND_URL}/login?error=oauth_error`);

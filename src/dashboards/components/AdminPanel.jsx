@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWithRetry } from '../../lib/api/frontend/http.js';
+import { buildUrl } from '../../lib/api/frontend/client.js';
 import { 
   FiUsers, 
   FiSettings, 
@@ -93,7 +94,7 @@ const AdminPanel = ({ role }) => {
   // Fetch functions
   const fetchDepartments = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/departments', {
+      const response = await fetch(buildUrl('departments'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -108,7 +109,7 @@ const AdminPanel = ({ role }) => {
 
   const fetchActions = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/actions', {
+      const response = await fetch(buildUrl('actions'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -146,7 +147,7 @@ const AdminPanel = ({ role }) => {
   const fetchDocumentTypes = async () => {
     setLoadingDocTypes(true);
     try {
-      const response = await fetchWithRetry('http://localhost:5000/api/document-types', {
+      const response = await fetchWithRetry(buildUrl('document-types'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -163,7 +164,7 @@ const AdminPanel = ({ role }) => {
 
   const fetchFolders = async () => {
     try {
-      const response = await fetchWithRetry('http://localhost:5000/api/folders', {
+      const response = await fetchWithRetry(buildUrl('folders'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -180,7 +181,7 @@ const AdminPanel = ({ role }) => {
   const fetchSystemHealth = async () => {
     setLoadingHealth(true);
     try {
-      const response = await fetchWithRetry('http://localhost:5000/api/system/health', {
+      const response = await fetchWithRetry(buildUrl('system/health'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -197,7 +198,7 @@ const AdminPanel = ({ role }) => {
 
   const fetchSystemLogs = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/system/logs?limit=50', {
+      const response = await fetch(buildUrl('system/logs?limit=50'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -212,7 +213,7 @@ const AdminPanel = ({ role }) => {
 
   const fetchBackupHistory = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/system/backups', {
+      const response = await fetch(buildUrl('system/backups'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -227,7 +228,7 @@ const AdminPanel = ({ role }) => {
 
   const fetchMaintenanceMode = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/system/maintenance', {
+      const response = await fetch(buildUrl('system/maintenance'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -242,7 +243,7 @@ const AdminPanel = ({ role }) => {
 
   const fetchMaintenanceSettings = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/maintenance/status');
+      const response = await fetch(buildUrl('maintenance/status'));
       if (response.ok) {
         const data = await response.json();
         const msg = data.maintenanceMessage || '';
@@ -276,7 +277,7 @@ const AdminPanel = ({ role }) => {
 
   const fetchSystemStats = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/system/stats', {
+      const response = await fetch(buildUrl('system/stats'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -291,7 +292,7 @@ const AdminPanel = ({ role }) => {
 
   const handleClearCache = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/system/cache/clear', {
+      const response = await fetch(buildUrl('system/cache/clear'), {
         method: 'POST',
         credentials: 'include',
       });
@@ -309,7 +310,7 @@ const AdminPanel = ({ role }) => {
   const handleCreateBackup = async () => {
     setLoadingBackup(true);
     try {
-      const response = await fetchWithRetry('http://localhost:5000/api/system/backup', {
+      const response = await fetchWithRetry(buildUrl('system/backup'), {
         method: 'POST',
         credentials: 'include',
       });
@@ -330,7 +331,7 @@ const AdminPanel = ({ role }) => {
 
   const handleToggleMaintenanceMode = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/system/maintenance', {
+      const response = await fetch(buildUrl('system/maintenance'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -382,7 +383,7 @@ const AdminPanel = ({ role }) => {
 
     setSavingMaintenance(true);
     try {
-      const response = await fetch('http://localhost:5000/api/system/maintenance', {
+      const response = await fetch(buildUrl('system/maintenance'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -411,7 +412,7 @@ const AdminPanel = ({ role }) => {
   const fetchStats = async () => {
     setLoading(true);
     try {
-      const response = await fetchWithRetry('http://localhost:5000/api/admin/stats', {
+      const response = await fetchWithRetry(buildUrl('admin/stats'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -442,8 +443,8 @@ const AdminPanel = ({ role }) => {
   const handleSaveDepartment = async () => {
     try {
       const url = editingDept 
-        ? `http://localhost:5000/api/departments/${editingDept.department_id}`
-        : 'http://localhost:5000/api/departments';
+        ? buildUrl(`departments/${editingDept.department_id}`)
+        : buildUrl('departments');
       
       const response = await fetch(url, {
         method: editingDept ? 'PUT' : 'POST',
@@ -471,7 +472,7 @@ const AdminPanel = ({ role }) => {
     if (!confirm('Are you sure you want to delete this department?')) return;
     
     try {
-      const response = await fetch(`http://localhost:5000/api/departments/${deptId}`, {
+      const response = await fetch(buildUrl(`departments/${deptId}`), {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -514,8 +515,8 @@ const AdminPanel = ({ role }) => {
   const handleSaveAction = async () => {
     try {
       const url = editingAction 
-        ? `http://localhost:5000/api/actions/${editingAction.action_id}`
-        : 'http://localhost:5000/api/actions';
+        ? buildUrl(`actions/${editingAction.action_id}`)
+        : buildUrl('actions');
       
       const response = await fetch(url, {
         method: editingAction ? 'PUT' : 'POST',
@@ -548,7 +549,7 @@ const AdminPanel = ({ role }) => {
     if (!confirm('Are you sure you want to delete this action?')) return;
     
     try {
-      const response = await fetch(`http://localhost:5000/api/actions/${actionId}`, {
+      const response = await fetch(buildUrl(`actions/${actionId}`), {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -582,16 +583,16 @@ const AdminPanel = ({ role }) => {
         let endpoint;
         switch (type) {
           case 'doctype':
-            endpoint = `http://localhost:5000/api/document-types/${id}/documents`;
+            endpoint = buildUrl(`document-types/${id}/documents`);
             break;
           case 'folder':
-            endpoint = `http://localhost:5000/api/folders/${id}/documents`;
+            endpoint = buildUrl(`folders/${id}/documents`);
             break;
           case 'department':
-            endpoint = `http://localhost:5000/api/departments/${id}/documents`;
+            endpoint = buildUrl(`departments/${id}/documents`);
             break;
           case 'department_users':
-            endpoint = `http://localhost:5000/api/departments/${id}/users`;
+            endpoint = buildUrl(`departments/${id}/users`);
             break;
           default:
             console.error(`Unknown type: ${type}`);
@@ -634,8 +635,8 @@ const AdminPanel = ({ role }) => {
   const handleSaveDocumentType = async () => {
     try {
       const url = editingDocType 
-        ? `http://localhost:5000/api/document-types/${editingDocType.type_id}`
-        : 'http://localhost:5000/api/document-types';
+        ? buildUrl(`document-types/${editingDocType.type_id}`)
+        : buildUrl('document-types');
       
       const response = await fetch(url, {
         method: editingDocType ? 'PUT' : 'POST',
@@ -663,7 +664,7 @@ const AdminPanel = ({ role }) => {
     if (!confirm('Are you sure you want to delete this document type?')) return;
     
     try {
-      const response = await fetch(`http://localhost:5000/api/document-types/${typeId}`, {
+      const response = await fetch(buildUrl(`document-types/${typeId}`), {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -696,8 +697,8 @@ const AdminPanel = ({ role }) => {
   const handleSaveFolder = async () => {
     try {
       const url = editingFolder 
-        ? `http://localhost:5000/api/folders/${editingFolder.folder_id}`
-        : 'http://localhost:5000/api/folders';
+        ? buildUrl(`folders/${editingFolder.folder_id}`)
+        : buildUrl('folders');
       
       const response = await fetch(url, {
         method: editingFolder ? 'PUT' : 'POST',
@@ -725,7 +726,7 @@ const AdminPanel = ({ role }) => {
     if (!confirm('Are you sure you want to delete this folder?')) return;
     
     try {
-      const response = await fetch(`http://localhost:5000/api/folders/${folderId}`, {
+      const response = await fetch(buildUrl(`folders/${folderId}`), {
         method: 'DELETE',
         credentials: 'include'
       });

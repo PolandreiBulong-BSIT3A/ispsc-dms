@@ -1033,7 +1033,7 @@ const Document = ({ role, onOpenTrash, onNavigateToUpload, onNavigateToUpdate })
       
       if (draggedDocument.isMultiple) {
         // Mass move operation
-        response = await fetch(`http://localhost:5000/api/documents/bulk/folder`, {
+        response = await fetch(buildUrl('documents/bulk/folder'), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -1044,7 +1044,7 @@ const Document = ({ role, onOpenTrash, onNavigateToUpload, onNavigateToUpdate })
         });
       } else {
         // Single document move
-        response = await fetch(`http://localhost:5000/api/documents/${draggedDocument.id}/folder`, {
+        response = await fetch(buildUrl(`documents/${draggedDocument.id}/folder`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -1585,7 +1585,7 @@ const Document = ({ role, onOpenTrash, onNavigateToUpload, onNavigateToUpdate })
   const fetchDocumentTypes = useCallback(async () => {
     setDocumentTypesLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/document-types', {
+      const response = await fetch(buildUrl('document-types'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -1606,7 +1606,7 @@ const Document = ({ role, onOpenTrash, onNavigateToUpload, onNavigateToUpdate })
   const fetchDepartments = useCallback(async () => {
     setDepartmentsLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/departments', {
+      const response = await fetch(buildUrl('departments'), {
         method: 'GET',
         credentials: 'include',
       });

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../../contexts/UserContext.jsx';
 import { fetchWithRetry } from '../../lib/api/frontend/http.js';
+import { buildUrl } from '../../lib/api/frontend/client.js';
 import { FiLink, FiX, FiCheck, FiAlertCircle, FiExternalLink, FiMaximize2, FiPlus, FiChevronDown } from 'react-icons/fi';
 import { useDocuments } from '../../contexts/DocumentContext.jsx';
 import { useNotifications } from '../../contexts/NotificationContext.jsx';
@@ -113,7 +114,7 @@ const Upload = ({ role, onNavigateToDocuments }) => {
   // Fetch document types
   const fetchDocumentTypes = async () => {
     try {
-      const response = await fetchWithRetry('http://localhost:5000/api/document-types', {
+      const response = await fetchWithRetry(buildUrl('document-types'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -131,7 +132,7 @@ const Upload = ({ role, onNavigateToDocuments }) => {
   // Fetch folders
   const fetchFolders = async () => {
     try {
-      const response = await fetchWithRetry('http://localhost:5000/api/folders', {
+      const response = await fetchWithRetry(buildUrl('folders'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -150,7 +151,7 @@ const Upload = ({ role, onNavigateToDocuments }) => {
   const fetchDepartments = async () => {
     try {
       setDepartmentsLoading(true);
-      const response = await fetchWithRetry('http://localhost:5000/api/departments', {
+      const response = await fetchWithRetry(buildUrl('departments'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -186,7 +187,7 @@ const Upload = ({ role, onNavigateToDocuments }) => {
   const fetchUsers = async () => {
     try {
       setUsersLoading(true);
-      const response = await fetchWithRetry('http://localhost:5000/api/users', {
+      const response = await fetchWithRetry(buildUrl('users'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -224,7 +225,7 @@ const Upload = ({ role, onNavigateToDocuments }) => {
   const fetchActionRequired = async () => {
     try {
       setActionsLoading(true);
-      const response = await fetchWithRetry('http://localhost:5000/api/action-required', {
+      const response = await fetchWithRetry(buildUrl('action-required'), {
         method: 'GET',
         credentials: 'include',
       });
@@ -352,7 +353,7 @@ const Upload = ({ role, onNavigateToDocuments }) => {
     if (seeded === 'true') return;
     (async () => {
       try {
-        const resp = await fetchWithRetry('http://localhost:5000/api/documents/distinct-from-to?limit=200', {
+        const resp = await fetchWithRetry(buildUrl('documents/distinct-from-to?limit=200'), {
           method: 'GET',
           credentials: 'include'
         });
@@ -523,7 +524,7 @@ const Upload = ({ role, onNavigateToDocuments }) => {
     
     setAddingDocType(true);
     try {
-      const response = await fetchWithRetry('http://localhost:5000/api/document-types', {
+      const response = await fetchWithRetry(buildUrl('document-types'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -560,7 +561,7 @@ const Upload = ({ role, onNavigateToDocuments }) => {
     
     setAddingFolder(true);
     try {
-      const response = await fetchWithRetry('http://localhost:5000/api/folders', {
+      const response = await fetchWithRetry(buildUrl('folders'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

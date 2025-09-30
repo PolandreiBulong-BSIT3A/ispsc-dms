@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowCounterclockwise, Trash2, Search, ExclamationTriangle, X, ArrowDownUp, ArrowUp, ArrowDown, Envelope, Trash } from 'react-bootstrap-icons';
 import { FiChevronLeft, FiChevronRight, FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
 import { useUser } from '../../contexts/UserContext';
+import { buildUrl } from '../../lib/api/frontend/client.js';
 
 const UserTrash = ({ onBack, currentUser, isAdmin, effectiveIsDean }) => {
   const [users, setUsers] = useState([]);
@@ -60,7 +61,7 @@ const UserTrash = ({ onBack, currentUser, isAdmin, effectiveIsDean }) => {
     setError('');
     try {
       // Build URL with dean scoping if applicable
-      const base = 'http://localhost:5000/api/users';
+      const base = buildUrl('users');
       const qs = new URLSearchParams({ status: 'deleted' });
       if (effectiveIsDean && currentUser) {
         if (currentUser.department_id) {
@@ -114,7 +115,7 @@ const UserTrash = ({ onBack, currentUser, isAdmin, effectiveIsDean }) => {
   }, []);
 
   const restoreUser = async (userId) => {
-    const response = await fetch('http://localhost:5000/api/users/trash', {
+    const response = await fetch(buildUrl('users/trash'), {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -127,7 +128,7 @@ const UserTrash = ({ onBack, currentUser, isAdmin, effectiveIsDean }) => {
   };
 
   const permanentlyDeleteUser = async (userId) => {
-    const response = await fetch('http://localhost:5000/api/users/trash', {
+    const response = await fetch(buildUrl('users/trash'), {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -141,7 +142,7 @@ const UserTrash = ({ onBack, currentUser, isAdmin, effectiveIsDean }) => {
 
   const restoreSelected = async () => {
     if (selectedIds.length === 0) return;
-    const response = await fetch('http://localhost:5000/api/users/trash', {
+    const response = await fetch(buildUrl('users/trash'), {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -155,7 +156,7 @@ const UserTrash = ({ onBack, currentUser, isAdmin, effectiveIsDean }) => {
 
   const permanentlyDeleteSelected = async () => {
     if (selectedIds.length === 0) return;
-    const response = await fetch('http://localhost:5000/api/users/trash', {
+    const response = await fetch(buildUrl('users/trash'), {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -168,7 +169,7 @@ const UserTrash = ({ onBack, currentUser, isAdmin, effectiveIsDean }) => {
   };
 
   const permanentlyDeleteAll = async () => {
-    const response = await fetch('http://localhost:5000/api/users/trash', {
+    const response = await fetch(buildUrl('users/trash'), {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

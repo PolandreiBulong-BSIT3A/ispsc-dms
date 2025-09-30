@@ -5,9 +5,6 @@ import { useUser } from '../../contexts/UserContext.jsx';
 import socket from '../../lib/realtime/socket.js';
 import { fetchDepartments, getFallbackDepartments } from '../../lib/api/frontend/departments.api.js';
 import Select from 'react-select';
-
-const Announcements = ({ role, setActiveTab }) => {
-  const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
   const [loading, setLoading] = useState(false);
   const [announcements, setAnnouncements] = useState([]);
   const [error, setError] = useState('');
@@ -107,7 +104,7 @@ const Announcements = ({ role, setActiveTab }) => {
         target_roles: formIsPublic ? [] : selectedRoles,
         target_users: [],
       };
-      const endpoint = isEditing ? `${API_BASE}/api/announcements/${editingId}` : `${API_BASE}/api/announcements`;
+      const endpoint = isEditing ? buildUrl(`announcements/${editingId}`) : buildUrl('announcements');
       const res = await fetch(endpoint, {
         method: isEditing ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -190,7 +187,7 @@ const Announcements = ({ role, setActiveTab }) => {
     if (!deleteTargetId) return;
     setDeleting(true);
     try {
-      const res = await fetch(`${API_BASE}/api/announcements/${deleteTargetId}`, { method: 'DELETE', credentials: 'include' });
+      const res = await fetch(buildUrl(`announcements/${deleteTargetId}`), { method: 'DELETE', credentials: 'include' });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.message || 'Failed to delete');
       setAnnouncements(prev => prev.filter(a => a.id !== deleteTargetId));
@@ -210,7 +207,7 @@ const Announcements = ({ role, setActiveTab }) => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`${API_BASE}/api/announcements`, { credentials: 'include' });
+      const res = await fetch(buildUrl('announcements'), { credentials: 'include' });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Failed to load announcements');
       setAnnouncements(Array.isArray(data.announcements) ? data.announcements : (Array.isArray(data) ? data : []));
@@ -903,6 +900,6 @@ const Announcements = ({ role, setActiveTab }) => {
     </Modal>
   </div>
 );
-};
+
 
 export default Announcements;

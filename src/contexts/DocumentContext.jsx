@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { fetchWithRetry } from '../lib/api/frontend/http.js';
+import { buildUrl } from '../lib/api/frontend/client.js';
 
 const DocumentContext = createContext();
 
@@ -35,7 +36,7 @@ export const DocumentProvider = ({ children }) => {
   });
 
   // API base URL
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || buildUrl('');
 
   // Utility function for API calls
   const apiCall = useCallback(async (endpoint, options = {}) => {

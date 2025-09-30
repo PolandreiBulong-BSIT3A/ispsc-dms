@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { FiCheck, FiAlertCircle } from 'react-icons/fi';
+import { buildUrl } from '../../lib/api/frontend/client.js';
 
 const Reply = ({ onNavigateToDocuments }) => {
   const [replyTitle, setReplyTitle] = useState('');
@@ -113,7 +114,7 @@ const Reply = ({ onNavigateToDocuments }) => {
       // Try to get a Reply document type id to satisfy backend if needed
       let replyTypeId = null;
       try {
-        const typesRes = await fetch('http://localhost:5000/api/document-types', { method: 'GET', credentials: 'include' });
+        const typesRes = await fetch(buildUrl('document-types'), { method: 'GET', credentials: 'include' });
         if (typesRes.ok) {
           const typesData = await typesRes.json();
           const list = Array.isArray(typesData) ? typesData : (typesData.documentTypes || []);
@@ -126,7 +127,7 @@ const Reply = ({ onNavigateToDocuments }) => {
         }
       } catch {}
 
-      const res = await fetch('http://localhost:5000/api/documents/reply', {
+      const res = await fetch(buildUrl('documents/reply'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import socket from '../lib/realtime/socket.js';
 import { useNavigate } from 'react-router-dom';
+import { buildUrl } from '../lib/api/frontend/client.js';
 
 const UserContext = createContext();
 
@@ -22,7 +23,7 @@ export const UserProvider = ({ children }) => {
   });
 
   // API base URL
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || buildUrl('');
 
   // Enhanced API request function with automatic token refresh
   const apiRequest = useCallback(async (url, options = {}) => {
